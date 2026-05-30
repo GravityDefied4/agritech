@@ -1,0 +1,3 @@
+const Crop = require('../models/Crop');
+exports.getCrops = async (req, res) => { try { res.json(await Crop.find({ owner: req.user._id }).populate('farm')); } catch (e) { res.status(500).json({ message: e.message }); } };
+exports.createCrop = async (req, res) => { try { res.status(201).json(await Crop.create({ ...req.body, owner: req.user._id })); } catch (e) { res.status(500).json({ message: e.message }); } };
