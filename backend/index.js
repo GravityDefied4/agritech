@@ -27,3 +27,10 @@ app.get('/api/weather', async (req, res) => {
 });
 
 app.listen(process.env.PORT || 8000, () => console.log('Backend running on port 8000'));
+// Global error handler (must have 4 parameters: err, req, res, next)
+app.use((err, req, res, next) => {
+  console.error('Server Error:', err.message);
+  if (err.name === 'ValidationError') return res.status(400).json({ message: err.message });
+  if (err.name === 'CastError') return res.status(400).json({ message: 'Invalid ID format' });
+  res.status(500).json({ message: 'Internal server error' });
+});
