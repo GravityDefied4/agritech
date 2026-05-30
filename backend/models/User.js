@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -9,12 +10,19 @@ const userSchema = new mongoose.Schema({
   address: String
 }, { timestamps: true });
 
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-  next();
+// ✅ Option 1: Async function WITHOUT next parameter (Mongoose handles promise)
+userSchema.pre('save', async function() {
+  // Only hash if password is new or modified
+  if (!this.isModified('password')) return;
+  
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  // No next() call needed - Mongoose auto-proceeds when promise resolves
 });
-userSchema.methods.comparePassword = async function(candidate) {
-  return await bcrypt.compare(candidate, this.password);
+
+// Method to compare password for login
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
+
 module.exports = mongoose.model('User', userSchema);
