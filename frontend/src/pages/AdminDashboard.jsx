@@ -9,25 +9,39 @@ const COLORS = ['#2c5e2e', '#3498db', '#f39c12', '#9b59b6'];
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadStats = async () => {
+    const loadData = async () => {
       try {
-        const { data } = await api.get('/admin/analytics');
-        setStats(data);
+        const [statsRes, ordersRes] = await Promise.all([
+          api.get('/admin/analytics'),
+          api.get('/orders') // Fetch all orders for management
+        ]);
+        setStats(statsRes.data);
+        setOrders(ordersRes.data);
       } catch (err) {
-        console.error('Failed to load analytics:', err);
+        console.error('Failed to load data:', err);
       }
       setLoading(false);
     };
-    loadStats();
+    loadData();
   }, []);
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      await api.put(`/orders/${orderId}/status`, { status: newStatus });
+      // Update local state
+      setOrders(prev => prev.map(o => o._id === orderId ? {...o, status: newStatus} : o));
+    } catch {
+      alert('Failed to update order status');
+    }
+  };
 
   if (loading) return <div className="container"><p>Loading analytics...</p></div>;
   if (!stats) return <div className="container"><p>Failed to load data</p></div>;
 
-  // Data for Bar Chart
   const overviewData = [
     { name: 'Users', value: stats.totalUsers },
     { name: 'Farms', value: stats.totalFarms },
@@ -35,7 +49,6 @@ export default function AdminDashboard() {
     { name: 'Orders', value: stats.totalOrders }
   ];
 
-  // Data for Pie Chart (Role distribution)
   const roleData = [
     { name: 'Farmers', value: stats.farmers },
     { name: 'Admins', value: stats.admins }
@@ -66,7 +79,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Charts Section */}
+      {/* Charts */}
       <div className="grid" style={{ marginTop: 30 }}>
         <div className="card">
           <h3>Platform Overview</h3>
@@ -87,14 +100,9 @@ export default function AdminDashboard() {
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie 
-                data={roleData} 
-                cx="50%" 
-                cy="50%" 
-                labelLine={false} 
+                data={roleData} cx="50%" cy="50%" labelLine={false} 
                 label={({ name, value }) => `${name}: ${value}`} 
-                outerRadius={80} 
-                fill="#8884d8" 
-                dataKey="value"
+                outerRadius={80} fill="#8884d8" dataKey="value"
               >
                 {roleData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -106,31 +114,45 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent Orders Table */}
+      {/* Order Management Section */}
       <div className="card" style={{ marginTop: 30 }}>
-        <h3>Recent Orders</h3>
-        {stats.recentOrders.length === 0 ? (
-          <p style={{ color: '#666', marginTop: 10 }}>No orders yet</p>
+        <h3>Order Management</h3>
+        {orders.length === 0 ? (
+          <p style={{ color: '#666', marginTop: 10 }}>No orders placed yet.</p>
         ) : (
           <table style={{ marginTop: 15 }}>
             <thead>
               <tr>
                 <th>Customer</th>
                 <th>Product</th>
-                <th>Quantity</th>
+                <th>Qty</th>
                 <th>Total</th>
-                <th>Status</th>
+                <th>Date</th>
+                <th>Status (Admin Update)</th>
               </tr>
             </thead>
             <tbody>
-              {stats.recentOrders.map(order => (
+              {orders.map(order => (
                 <tr key={order._id}>
                   <td>{order.user?.name || 'N/A'}</td>
                   <td>{order.product?.name || order.productName}</td>
                   <td>{order.quantity}</td>
                   <td>${order.totalAmount.toFixed(2)}</td>
-                  <td style={{ textTransform: 'capitalize', color: order.status === 'delivered' ? '#2c5e2e' : '#f39c12' }}>
-                    {order.status}
+                  <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                  <td>
+                    <select
+                      value={order.status}
+                      onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                      style={{
+                        padding: '6px 10px', borderRadius: '4px', border: '1px solid #ccc',
+                        background: order.status === 'delivered' ? '#e8f5e9' : order.status === 'shipped' ? '#fff3cd' : '#f8f9fa',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      <option value="pending">⏳ Pending</option>
+                      <option value="shipped">🚚 Shipped</option>
+                      <option value="delivered">✅ Delivered</option>
+                    </select>
                   </td>
                 </tr>
               ))}

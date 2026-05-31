@@ -11,8 +11,12 @@ export default function Login() {
       const { data } = await api.post('/users/login', { email, password: pass });
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      nav('/dashboard');
-    } catch (err) { alert(err.response?.data?.message || 'Login failed'); }
+
+      const redirectPath = data.user.role === 'admin' ? '/admin' : '/dashboard';
+      nav(redirectPath);
+    } catch (err) { 
+      alert(err.response?.data?.message || 'Login failed'); 
+    }
   };
   return (
     <div className="container"><div className="card" style={{ maxWidth: 400, margin: '50px auto' }}>

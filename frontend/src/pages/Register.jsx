@@ -10,8 +10,12 @@ export default function Register() {
       const { data } = await api.post('/users/register', form);
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      nav('/dashboard');
-    } catch (err) { alert(err.response?.data?.message || 'Failed'); }
+
+      const redirectPath = data.user.role === 'admin' ? '/admin' : '/dashboard';
+      nav(redirectPath);
+    } catch (err) { 
+      alert(err.response?.data?.message || 'Failed'); 
+    }
   };
   return (
     <div className="container"><div className="card" style={{ maxWidth: 400, margin: '50px auto' }}>
