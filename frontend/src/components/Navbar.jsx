@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 export default function Navbar() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || 'null');
-  const logout = () => { localStorage.clear(); navigate('/login'); };
+  const logout = () => { localStorage.clear(); navigate('/'); };
 
   return (
     <nav className="navbar">
