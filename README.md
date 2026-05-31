@@ -100,13 +100,13 @@ npm install
 ```
 
 ### 4. Database Setup
-- Ensure MongoDB is running locally (**mongod**), or create a free cluster on **MongoDB Atlas**.
-- Update your **.env** file with the correct connection string.
+- Ensure MongoDB is running locally (`mongod`), or create a free cluster on **MongoDB Atlas**.
+- Update your `.env` file with the correct connection string.
 
 ---
 
 ## ⚙️ Configuration
-Create a .env file in the backend/ directory:
+Create a `.env` file in the backend/ directory:
 ```env
 # Server
 PORT=8000
