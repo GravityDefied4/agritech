@@ -145,9 +145,8 @@ npm run dev
 
 ### 🔐 First-Time Setup:
 1. Navigate to **http://localhost:3000**
-2. Click **Register** and create a farmer account
-3. Log in to access the Farmer Dashboard
-4. To test Admin features: change your user's role field to "admin" in MongoDB, then log in again.
+2. Click **Register** and choose whether to create a farmer account or admin account
+3. Log in to access the Dashboard
 
 ## 📁 Project Structure
 ```
@@ -235,10 +234,10 @@ agritech/
 - Replace `:id` with the actual MongoDB document ID
 
 ## 👥 Creator & Credits
-**Developed by**: Zedekiah Heteroza
-**Course**: Bachelor of Science in Information Technology
-**Institution**: Universidad de Dagupan
-**Year**: 2026
+### **Developed by**: Zedekiah Heteroza
+### **Course**: Bachelor of Science in Information Technology
+### **Institution**: Universidad de Dagupan
+### **Year**: 2026
 
 ## 📄 License
 This project is licensed under the **MIT License** for academic and demonstration purposes.
