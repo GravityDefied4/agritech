@@ -234,11 +234,11 @@ agritech/
 - Replace `:id` with the actual MongoDB document ID
 
 ## 👥 Creator & Credits
-### **Developed by**: Zedekiah Heteroza
-### **Course**: Bachelor of Science in Information Technology
-### **Institution**: Universidad de Dagupan
-### **Year**: 2026
+**Developed by**: Zedekiah Heteroza  
+**Course**: Bachelor of Science in Information Technology  
+**Institution**: Universidad de Dagupan  
+**Year**: 2026
 
 ## 📄 License
-This project is licensed under the **MIT License** for academic and demonstration purposes.
+This project is licensed under the **MIT License** for academic and demonstration purposes.  
 © 2026 Agri-Tech. All rights reserved.
