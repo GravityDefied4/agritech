@@ -12,6 +12,8 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/farms', require('./routes/farmRoutes'));
 app.use('/api/crops', require('./routes/cropRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
 app.get('/api/weather', async (req, res) => {
   const { city, lat, lon } = req.query;
@@ -26,11 +28,12 @@ app.get('/api/weather', async (req, res) => {
   } catch { res.status(500).json({ message: 'Weather fetch failed' }); }
 });
 
-app.listen(process.env.PORT || 8000, () => console.log('Backend running on port 8000'));
-// Global error handler (must have 4 parameters: err, req, res, next)
+// Global error handler
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.message);
   if (err.name === 'ValidationError') return res.status(400).json({ message: err.message });
   if (err.name === 'CastError') return res.status(400).json({ message: 'Invalid ID format' });
   res.status(500).json({ message: 'Internal server error' });
 });
+
+app.listen(process.env.PORT || 8000, () => console.log('Backend running on port 8000'));
