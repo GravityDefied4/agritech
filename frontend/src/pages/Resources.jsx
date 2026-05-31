@@ -14,6 +14,7 @@ export default function Resources() {
   const handlePurchase = async () => {
     if (!selectedProduct || quantity < 1) return;
     
+    // Confirmation Modal logic
     if (!window.confirm(`Confirm purchase of ${quantity} x ${selectedProduct.name}?\n\nTotal: $${(selectedProduct.price * quantity).toFixed(2)}`)) {
       return;
     }
@@ -43,7 +44,14 @@ export default function Resources() {
               <img 
                 src={p.imageUrl} 
                 alt={p.name}
-                style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px', marginBottom: '15px' }}
+                style={{ 
+                  width: '100%', 
+                  height: '220px', // Increased height
+                  objectFit: 'contain', // ✅ KEY FIX: Shows full image without cutting off
+                  borderRadius: '8px', 
+                  marginBottom: '15px',
+                  backgroundColor: '#f8f9fa' // Nice background for transparent images
+                }}
                 onError={(e) => { e.target.style.display = 'none'; }}
               />
             )}
@@ -81,6 +89,23 @@ export default function Resources() {
         }} onClick={() => { setSelectedProduct(null); setQuantity(1); }}>
           <div className="card" style={{ maxWidth: '400px', width: '100%' }} onClick={e => e.stopPropagation()}>
             <h3>Purchase: {selectedProduct.name}</h3>
+            
+            {/* Show image in purchase modal too */}
+            {selectedProduct.imageUrl && (
+               <img 
+                src={selectedProduct.imageUrl} 
+                alt={selectedProduct.name}
+                style={{ 
+                  width: '100%', 
+                  height: '150px', 
+                  objectFit: 'contain', 
+                  borderRadius: '8px', 
+                  marginBottom: '15px',
+                  backgroundColor: '#f8f9fa'
+                }}
+               />
+            )}
+
             <p style={{ margin: '15px 0' }}>
               <strong>Price per unit:</strong> ${selectedProduct.price}
             </p>
