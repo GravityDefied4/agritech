@@ -232,3 +232,5 @@ tr:hover td { background: #fafbfc; }
   th, td { padding: var(--space-3); font-size: var(--text-sm); }
   .container { padding: var(--space-4); }
 }
+
+.btn, .btn:hover, .btn:focus, .btn:active { color: #ffffff !important; }
