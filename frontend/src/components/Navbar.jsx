@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
+import { FaLeaf } from 'react-icons/fa'; // ✅ Import the leaf icon
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -7,7 +8,10 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      <div style={{ fontWeight: 'bold', fontSize: '18px' }}>Agri-Tech</div>
+      <div style={{ fontWeight: 'bold', fontSize: '18px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <FaLeaf /> Agri-Tech
+      </div>
+      
       <div>
         {user ? (
           user.role === 'admin' ? (
